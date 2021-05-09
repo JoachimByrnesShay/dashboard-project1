@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,14 +6,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    {% block css %}
+     
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.1/lumen/bootstrap.min.css" crossorigin="anonymous">
-    {% import static %}
-    <link rel="stylesheet" href="{% static 'styles.css' %}" />
-    {% end block %}
+   
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+  
 </head>
 
 <body>
+  <h1>testing</h1>
+ 
 </body>
 
 </html>
