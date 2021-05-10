@@ -2,6 +2,7 @@
 {% load mathfilters %}
 {% block content %}
 <h1>Languages used</h1>
+<div class='pie-display'>
 {% if form.repo_name.value %}
   GITHUB REPO:  {{ form.user_name.value}}/{{form.repo_name.value}}
 {% else %}
@@ -29,5 +30,6 @@
 {% if pie_render %}
   <embed type="image/svg+xml" src={{ pie_render.decode |safe }}/>
 {% endif %}
+</div>
     
 {% endblock %}

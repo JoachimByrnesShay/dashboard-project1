@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load mathfilters %}
 {% block content %}
-
+<h1>A tabular view of Github repostitories</h1>
 <table class="table">
 <thead>
     <tr>
@@ -14,16 +14,24 @@
 </thead>
 {% for repo in repos %}
   <tr>
-    <td class="font-weight-bold">{{repo.name}}</td>
-    <td>
+    
+    <td class="font-weight-bold"><span class='table-cell'>{{repo.name}}</span></td>
+
+    <td><span class='table-cell'>
       {% if repo.size < 1000 %}
         {{repo.size}} kb
       {% else %}
         {{repo.size|div:1024|floatformat:2}} MB
       {% endif %}
+    </span>
     </td>
-    <td>{{repo.stargazers_count}}</td>
-    <td>{{repo.language}}</td>
+
+ 
+    <td><span class='table-cell'>{{repo.stargazers_count}}</span></td>
+  
+
+    <td><span class='table-cell'>{{repo.language}}</span></td>
+ 
     <td><a class='btn btn-success' href={{repo.html_url}}>View</a></td>
   </tr>
 {% endfor %}

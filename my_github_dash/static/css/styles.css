@@ -1,3 +1,66 @@
 h1 {
-  background: blue;
+  background: rgb(245,225,200);
+  padding: .2em 0.4em .2em 0.4em;
+}
+
+body {
+  background: rgb(210,220,220);
+}
+
+table.table {
+  background-color: white;
+}
+
+table.table td {
+  background: hsl(10,25%,95%);
+  padding: .4em;
+  margin: 0;
+  border: 3px solid black;
+}
+
+span.table-cell {
+  margin: .4em;
+  display: inline-block;
+  background: rgb(240,240,240);
+  padding: .2em .5em .2em .5em;
+  border-radius: .5em;
+}
+
+li.nav-item {
+  float: right;
+  margin-right: 2em;
+  width: 5em;
+  background: grey;
+}
+
+ul {
+}
+
+li.nav-item a {
+  position: absolute;
+  top: .5em;
+  border-radius: 1em;
+  max-width: 100%;
+}
+
+li.nav-item .nav-link:hover {
+  text-shadow: 0em 0em 1em yellow;
+  font-weight: bold;
+  max-width: 100%;
+  text-transform: uppercase;
+}
+
+.pie-display {
+  padding: .5em;
+  background: white;
+}
+
+.btn {
+  background: black;
+  color: white;
+}
+
+input {
+  background: hsl(100,100%,70%);
+  font-weight: bold;
 }

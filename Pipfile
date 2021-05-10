@@ -12,6 +12,7 @@ python-dotenv = "*"
 pygithub = "*"
 django-mathfilters = "*"
 urllib3 = "*"
+whitenoise = "*"
 
 [dev-packages]
 

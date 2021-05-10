@@ -18,13 +18,13 @@
     <nav class="navbar navbar-dark bg-dark navbar-expand">
       <div class="container">
         <div class="navbar-header">
-          <a class="navbar-brand" href="#">Dashboard Site</a>
+          <a class="navbar-brand" href="{% url 'home' %}">Joachim Byrnes-Shay</a>
         </div>
-        <ul class="nav navbar-nav ml-auto mr-auto text-white">
-          <li class="nav-item"><a class='nav-link' href="{% url 'home' %}">Home</a></li>
-          <li class="nav-item ml-5"><a class='nav-link' href="{% url 'table' %}">Table</a></li>
-          <li class="nav-item ml-5"><a class='nav-link' href="{% url 'bar_chart' %}">Bar Chart</a></li>
-          <li class="nav-item ml-5"><a class='nav-link' href="{% url 'pie_chart' %}">Pie Chart</a></li>
+        <ul class="nav navbar-nav ml-auto mr-auto">
+          <li class="nav-item"><a class='nav-link text-light' href="{% url 'home' %}">Home</a></li>
+          <li class="nav-item ml-5"><a class='nav-link text-light' href="{% url 'table' %}">Table</a></li>
+          <li class="nav-item ml-5"><a class='nav-link text-light' href="{% url 'bar_chart' %}">Bar Chart</a></li>
+          <li class="nav-item ml-5"><a class='nav-link text-light' href="{% url 'pie_chart' %}">Pie Chart</a></li>
         </ul>
       </div>
     </nav>
