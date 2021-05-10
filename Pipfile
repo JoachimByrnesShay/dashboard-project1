@@ -10,6 +10,8 @@ pygal = "*"
 django-heroku = "*"
 python-dotenv = "*"
 pygithub = "*"
+django-mathfilters = "*"
+urllib3 = "*"
 
 [dev-packages]
 

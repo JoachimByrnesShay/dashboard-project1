@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% load mathfilters %}
+{% block content %}
+
+<embed type="image/svg+xml" src="{{ chart_render|safe}}" />
+
+{% endblock %}

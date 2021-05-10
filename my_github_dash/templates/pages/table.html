@@ -1,7 +1,32 @@
 {% extends 'base.html' %}
+{% load mathfilters %}
 {% block content %}
 
-<h1> testing from table </h1>
+<table class="table">
+<thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Size</th>
+      <th scope="col">Stars</th>
+      <th scope="col">Language</th>
+      <th scope="col"></th>
+    </tr>
+</thead>
+{% for repo in repos %}
+  <tr>
+    <td class="font-weight-bold">{{repo.name}}</td>
+    <td>
+      {% if repo.size < 1000 %}
+        {{repo.size}} kb
+      {% else %}
+        {{repo.size|div:1024|floatformat:2}} MB
+      {% endif %}
+    </td>
+    <td>{{repo.stargazers_count}}</td>
+    <td>{{repo.language}}</td>
+    <td><a class='btn btn-success' href={{repo.html_url}}>View</a></td>
+  </tr>
+{% endfor %}
 
-
+</table>
 {% endblock %}
