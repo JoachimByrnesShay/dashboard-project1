@@ -2,22 +2,28 @@
 {% load mathfilters %}
 {% block content %}
 <h1>Languages used</h1>
+{% if form.repo_name.value %}
+  GITHUB REPO:  {{ form.user_name.value}}/{{form.repo_name.value}}
+{% else %}
+  Please make sure the Github repository you request exists!
+{% endif %}
 <form class="form" method="POST">
     {% csrf_token %}
 
-        <!-- 
-            <input type='text' name='domain' placeholder='github.com' value = "{{form.domain}}" id='id_domain'>
+       {{form.domain}}/
+       {{form.user_name}}/
+       {{form.repo_name}}
+<!-- 
+            <input type='text' name='domain' placeholder='github.com' value = "{{domain}}" id='id_domain'>
        
 
-        <input type='text' name='user_name' placeholder='user_name' value="{{form.user_name}}" id='id_user_name'>
+        <input type='text' name='user_name' placeholder='user_name' value="{{fuser_name}}" id='id_user_name'>
         
             <span>/</span>
      
-        <input type='text' name='repo_name' placeholder='repo_name' value="{{repo_name}}" id="id_repo_name">
-     -->
-           
-      
-    {{form.as_p}}
+        <input type='text' name='repo_name' placeholder='repo_name' value="{{repo_name}}" id="id_repo_name"> -->
+    
+
      <button class="btn" type='submit'>Show</button> 
 </form>
 {% if pie_render %}

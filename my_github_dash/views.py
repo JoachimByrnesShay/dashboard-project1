@@ -10,17 +10,14 @@ load_dotenv()
 
 
 class RepoForm(forms.Form):
-    #domain = forms.CharField(max_length=100, label='domain')
-    #domain = 'github.com'
-    domain= forms.CharField(initial='github.com', disabled=True)
-    #user_name = forms.CharField(max_length=100, label='user_name')
-    #repo_name = forms.CharField(max_length=100, label='repo_name')
+    domain= forms.CharField(max_length=10,initial='github.com', disabled=True)
     user_name = forms.CharField(initial='JoachimByrnesShay')
     repo_name=forms.CharField(initial='djangogirls_tute1')
-    # def __init__(self, data, **kwargs):
-    #     initial = kwargs.get('initial', {})
-    #     data = {**initial, **data}
-    #     super().__init__(data, **kwargs)
+
+class BlankRepoForm(forms.Form):
+    domain= forms.CharField(initial='github.com', disabled=True)
+    user_name = forms.CharField(max_length=100, label='user_name', widget=forms.TextInput(attrs={'placeholder': 'must exist on github'}))
+    repo_name = forms.CharField(max_length=100, label='repo_name', widget=forms.TextInput(attrs={'placeholder': 'must exist on github'}))
 
 def home(request):
     context = {}
@@ -35,30 +32,35 @@ def get_repos(username='JoachimByrnesShay'):
     login = user.login
     return user.get_repos()
 
+def user_exists(user):
+    token = os.getenv('GH_ACCESS_TOKEN')
+    g = Github(token)
+    try:
+        user = g.get_user(user)
+    except:
+        user = None
+    return user
+
+def repo_exists(user, repo):
+    try: 
+        repo = user.get_repo(repo)
+    except:
+        repo = None
+    return repo
+
 def get_repo(user, repo):
     
     url = "https://api.github.com/users/%s/repos" % user
-    #print(url)
     token = os.getenv('GH_ACCESS_TOKEN')
     g = Github(token)
    
-    #login = user.login
-    #print(user)
-
     try:
         user = g.get_user(user)
         repo = user.get_repo(repo)
     except:
         repo = None
-    #print(repo.GithubException)
-    #print('hello')
-    #request = requests.get("https://api.github.com/users/%s/repos" % user)
-    #json = request.json()
-   # print(repo)
-    #print(json)
     return repo
-    #repo = g.get_repo(repo)
-   # print(repo)
+
 
 def table(request):
     context = {}
@@ -91,25 +93,17 @@ def pie_chart(request):
     context = {}
     context['pie_render'] = None
     pie_chart = pygal.Pie()
-    #print(request.POST)
     if request.POST:
         print(request.POST)
         form = RepoForm(request.POST)
-       #print(form['domain'])
-        #print('hope')
         if form.is_valid():
             domain = form.cleaned_data['domain']
             user_name = form.cleaned_data['user_name']
             repo_name = form.cleaned_data['repo_name']
-            #form['user_name'] = user_name
-            #form['repo_name'] = repo_name
-            # print(user_name)
-            # print(repo_name)
             g= Github(user_name)
 
             repo = get_repo(user_name, repo_name)
-            print(repo)
-            pie_chart.title = "hi its a pie chart"
+            pie_chart.title = "Languages used in this repository"
             if repo:
                 languages = requests.get(repo.languages_url).json()
                 for lang in languages:
@@ -119,40 +113,23 @@ def pie_chart(request):
                 pie = pie_chart.render()
 
                 context['pie_render'] = pie
-            context['form'] = form
-        else: 
-            form = RepoForm(None)
-            domain = ''
-            user_name = ''
-            repo_name = ''
-
-            # # # print(pie)
-            # print(context['pie_render'])
-            return render(request, 'pages/pie.html', context)
+                context['form'] = form
+                return render(request, 'pages/pie.html', context)
+        
+        initial = {}
+        if user_exists(user_name):
+            initial['user_name'] = user_name
+        if repo_exists(user_name,repo_name):
+            initial['repo_name'] = repo_name
+        form = BlankRepoForm(initial=initial)
+        context['form'] = form
+        return render(request, 'pages/pie.html', context)
     else:
         default_user = 'JoachimByrnesShay'
         repo = get_repos()[1].name
-        #setup = {'domain': 'github.com', 'user_name': default_user, 'repo_name': repo}
-        #setup.update(request.POST)
         form = RepoForm()
-        print(form)
-        # if form.is_valid():
-        #     domain = form.cleaned_data['domain']
-        #     user_name = form.cleaned_data['user_name']
-        #     repo_name = form.cleaned_data['repo_name']
-       # form = RepoForm(initial={'domain': 'github.com', 'user_name': default_user, 'repo_name': repo})
-         
-        #context['user_name'] = default_user
-        #context['repo'] = repo
-        # form.initial['user_name'] = default_user
-        
-        # form.initial['repo'] = default_user
-             #form = RepoForm()
-        #print(form)
-    #print(form.user_name)
-    context['form'] = form
 
-    
+    context['form'] = form
     return render(request, 'pages/pie.html', context)
      
 
