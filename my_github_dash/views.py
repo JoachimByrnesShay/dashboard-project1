@@ -12,7 +12,7 @@ load_dotenv()
 class RepoForm(forms.Form):
     #domain = forms.CharField(max_length=100, label='domain')
     #domain = 'github.com'
-    domain= forms.CharField(initial='github.com')
+    domain= forms.CharField(initial='github.com', disabled=True)
     #user_name = forms.CharField(max_length=100, label='user_name')
     #repo_name = forms.CharField(max_length=100, label='repo_name')
     user_name = forms.CharField(initial='JoachimByrnesShay')

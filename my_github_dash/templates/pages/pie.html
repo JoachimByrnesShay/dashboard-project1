@@ -21,7 +21,7 @@
      <button class="btn" type='submit'>Show</button> 
 </form>
 {% if pie_render %}
-  {{ pie_render.decode |safe }}
+  <embed type="image/svg+xml" src={{ pie_render.decode |safe }}/>
 {% endif %}
     
 {% endblock %}
