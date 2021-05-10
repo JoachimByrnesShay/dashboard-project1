@@ -8,6 +8,8 @@ django = "*"
 requests = "*"
 pygal = "*"
 django-heroku = "*"
+python-dotenv = "*"
+pygithub = "*"
 
 [dev-packages]
 
