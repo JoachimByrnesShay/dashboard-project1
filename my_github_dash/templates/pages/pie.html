@@ -1,27 +1,27 @@
 {% extends 'base.html' %}
 {% load mathfilters %}
 {% block content %}
-
 <h1>Languages used</h1>
-
 <form class="form" method="POST">
-  {% csrf_token %}
- <!--  <div class="input-group"> -->
-    <!-- <div class="input-group-prepend">
-      <span class="input-group-text">github.com/</span>
-    </div> -->
-    <input type='text' name='user_name' placeholder='user_name' value='JoachimByrnesShay' id='id_user_name'>
-   <!--  <div class="input-group-prepend">
-      <span class="input-group-text">/</span>
-    </div> -->
-    <input type='text' name='repo_name' placeholder='repo_name' value='HW1-kickstart-coding' id="id_repo_name">
-  
- <!--  <div class='input-group-append'> -->
-  
-    <button class="btn" type='submit'>Show</button>
+    {% csrf_token %}
 
- </div>
+        <!-- 
+            <input type='text' name='domain' placeholder='github.com' value = "{{form.domain}}" id='id_domain'>
+       
+
+        <input type='text' name='user_name' placeholder='user_name' value="{{form.user_name}}" id='id_user_name'>
+        
+            <span>/</span>
+     
+        <input type='text' name='repo_name' placeholder='repo_name' value="{{repo_name}}" id="id_repo_name">
+     -->
+           
+      
+    {{form.as_p}}
+     <button class="btn" type='submit'>Show</button> 
 </form>
-<!-- <embed type="image/svg+xml" src="{{ chart_render|safe}}" /> -->
-
+{% if pie_render %}
+  {{ pie_render.decode |safe }}
+{% endif %}
+    
 {% endblock %}
