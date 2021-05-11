@@ -1,14 +1,61 @@
 h1 {
   background: rgb(245,225,200);
+  background: #98c1d9;
   padding: .2em 0.4em .2em 0.4em;
+  color: hsl(220,50%,50%);
+  text-shadow: 4px 4px 1em hsl(20,50%,50%);
 }
 
 body {
-  background: rgb(210,220,220);
+  background: rgb(215,240,240);
+  background: #e5e5e5;
+}
+
+.home-buttons {
+  background: hsla(200,50%,80%,.5);
+  padding: 3em;
+  border: 1px solid black;
+}
+
+.home-buttons a.btn {
+  margin: 1em;
+  display: inline-block;
+  width: 12em;
+  height: 4em;
+  text-align: left;
+  box-shadow: 5px 5px 3px grey;
+}
+
+.btn.blue-bg {
+  background: blue;
+}
+
+.btn.green-bg {
+  background: green;
+}
+
+.btn.red-bg {
+  background: red;
+}
+
+.yellow-bg {
+  background: yellow;
+}
+
+div.text-center::nth-of-type(1) {
+  background: blue;
+}
+
+.home-buttons span {
+  word-break: keep-all;
 }
 
 table.table {
   background-color: white;
+}
+
+thead {
+  background: #98c1d9;
 }
 
 table.table td {
@@ -22,13 +69,20 @@ span.table-cell {
   margin: .4em;
   display: inline-block;
   background: rgb(240,240,240);
+  background: grey;
+  background: #e5e5e5;
+  background: #eddcd2;
+  color: hsl(220,50%,50%);
+  color: black;
   padding: .2em .5em .2em .5em;
-  border-radius: .5em;
+  border-radius: 4px;
+  border: 1px solid grey;
 }
 
-li.nav-item {
-  float: right;
-  margin-right: 2em;
+li.nav-item {/* float: right;
+ *//* margin-right: 2em;
+ */
+  margin-right: .5em;
   width: 5em;
   background: grey;
 }
@@ -39,15 +93,30 @@ ul {
 li.nav-item a {
   position: absolute;
   top: .5em;
-  border-radius: 1em;
+  border-radius: .2em;
   max-width: 100%;
+  padding: .5em;
 }
 
-li.nav-item .nav-link:hover {
-  text-shadow: 0em 0em 1em yellow;
+.active {
+  text-shadow: .4em -.3em .4em yellow;
   font-weight: bold;
   max-width: 100%;
   text-transform: uppercase;
+}
+
+li.nav-item:hover a {
+  text-shadow: -.4em .3em .5em orange;
+  font-weight: bold;
+  max-width: 100%;
+  text-transform: uppercase;
+}
+
+nav ul.nav:hover a.active {
+  text-shadow: none;
+  font-weight: normal;
+  text-transform: normal;
+  border: none;
 }
 
 .pie-display {
@@ -56,11 +125,19 @@ li.nav-item .nav-link:hover {
 }
 
 .btn {
-  background: black;
   color: white;
+  background: black;
 }
 
 input {
   background: hsl(100,100%,70%);
   font-weight: bold;
+}
+
+h2.pie-repo {
+  background-color: #F7CAD0;
+}
+
+.bar-display {
+  border: 1px solid black;
 }

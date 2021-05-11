@@ -21,6 +21,7 @@ class BlankRepoForm(forms.Form):
 
 def home(request):
     context = {}
+    context['home_active'] = 'active'
     return render(request, 'pages/home.html', context)
 
 
@@ -62,17 +63,43 @@ def get_repo(user, repo):
     return repo
 
 
+def lower_case(e):
+    return capitalize(str(e.name))
+
 def table(request):
     context = {}
-    context['repos'] = get_repos()
- 
+   # context['repos'] = get_repos().sort(my_names(e))
+    stuff =  get_repos()
+    things =  sorted(stuff, key=lambda k: k.name.lower())
+    context['repos'] = things
+    context['table_active'] = 'active'
     return render(request, 'pages/table.html', context)
 
 
 def bar_chart(request):
+    from pygal.style import Style
+    from pygal.style import DarkStyle, DarkSolarizedStyle, LightStyle
+
+    custom_style = Style(
+      background='#EDDCD2',
+      #background='#a4aced9',
+     # plot_background='#EDF6F9',
+      #plot_background="#F0EFCB",
+      #plot_background='#FEFAE0',
+      #plot_background='#FEEAFA',
+      plot_background='#EDF2FB',
+      
+      foreground='#370617',
+      foreground_srrong='#FFFFFF',
+      foreground_subtle='#000000',
+      opacity='1',
+      opacity_hover='0.3',
+      title_font_size=30,
+      transition='400ms ease-in')
     context = {}
-    line_chart = pygal.HorizontalBar(truncate_label=30)
-    line_chart = pygal.Bar(truncate_label=30)
+    
+    #line_chart = pygal.Bar(truncate_label=30, style=custom_style)
+    line_chart = pygal.Bar(truncate_label=30, style=custom_style)
     line_chart.title = 'Repos by size'
     repos = get_repos()
    
@@ -81,7 +108,7 @@ def bar_chart(request):
 
     chart_svg = line_chart.render_data_uri()
     context['chart_render']= chart_svg
-
+    context['bar_chart_active'] = 'active'
     return render(request, 'pages/bar.html', context)
 
 
@@ -90,9 +117,22 @@ def bar_chart(request):
 # PIE chart fucntionality contingent upon this
 
 def pie_chart(request):
+    from pygal.style import Style
+    custom_style = Style(
+      background='#343A40',
+      plot_background="#FEFFE9",
+      foreground='#FFFFFF',
+      foreground_strong='#FFFFFF',
+      foreground_subtle='#000000',
+      opacity='1',
+      opacity_hover='1',
+      title_font_size=24,
+      transition='400ms ease-in')
+      #colors=('#1A535C', '#4ECDC4', '#F7FFF7', '#FF6B6B', '#FFE66D'))
+
     context = {}
     context['pie_render'] = None
-    pie_chart = pygal.Pie()
+    pie_chart = pygal.Pie(style=custom_style)
     if request.POST:
         print(request.POST)
         form = RepoForm(request.POST)
@@ -128,7 +168,7 @@ def pie_chart(request):
         default_user = 'JoachimByrnesShay'
         repo = get_repos()[1].name
         form = RepoForm()
-
+    context['pie_chart_active'] = 'active'
     context['form'] = form
     return render(request, 'pages/pie.html', context)
      

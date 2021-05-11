@@ -3,11 +3,13 @@
 {% block content %}
 <h1>Languages used</h1>
 <div class='pie-display'>
+<h2 class='pie-repo'>
 {% if form.repo_name.value %}
   GITHUB REPO:  {{ form.user_name.value}}/{{form.repo_name.value}}
 {% else %}
   Please make sure the Github repository you request exists!
 {% endif %}
+</h2>
 <form class="form" method="POST">
     {% csrf_token %}
 

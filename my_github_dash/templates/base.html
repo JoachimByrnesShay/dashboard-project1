@@ -10,7 +10,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
    
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
-  
+    {% block css-extra %}
+    {% endblock %}
 </head>
 
 <body>
@@ -20,12 +21,14 @@
         <div class="navbar-header">
           <a class="navbar-brand" href="{% url 'home' %}">Joachim Byrnes-Shay</a>
         </div>
+        {% block navbar %}
         <ul class="nav navbar-nav ml-auto mr-auto">
-          <li class="nav-item"><a class='nav-link text-light' href="{% url 'home' %}">Home</a></li>
-          <li class="nav-item ml-5"><a class='nav-link text-light' href="{% url 'table' %}">Table</a></li>
-          <li class="nav-item ml-5"><a class='nav-link text-light' href="{% url 'bar_chart' %}">Bar Chart</a></li>
-          <li class="nav-item ml-5"><a class='nav-link text-light' href="{% url 'pie_chart' %}">Pie Chart</a></li>
+          <li class="nav-item"><a class='nav-link text-light {{home_active}}' href="{% url 'home' %}">Home</a></li>
+          <li class="nav-item ml-5"><a class='nav-link text-light {{table_active}}' href="{% url 'table' %}">Table</a></li>
+          <li class="nav-item ml-5"><a class='nav-link text-light {{bar_chart_active}}' href="{% url 'bar_chart' %}">Bar Chart</a></li>
+          <li class="nav-item ml-5"><a class='nav-link text-light {{pie_chart_active}}' href="{% url 'pie_chart' %}">Pie Chart</a></li>
         </ul>
+        {% endblock %}
       </div>
     </nav>
   </header>

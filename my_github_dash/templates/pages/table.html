@@ -1,13 +1,19 @@
 {% extends 'base.html' %}
 {% load mathfilters %}
+
+{% block css-extra %}
+<link href="https://languages.abranhe.com/logos.css" rel="stylesheet">
+{% endblock %}
+{% with table_active='active' %}
+{% endwith %}
 {% block content %}
-<h1>A tabular view of Github repostitories</h1>
+<h1 class='text-center'>A tabular view of Github repositories</h1>
 <table class="table">
-<thead>
+<thead class="bg-dark text-white">
     <tr>
       <th scope="col">Name</th>
       <th scope="col">Size</th>
-      <th scope="col">Stars</th>
+      <th scope="col">Created Date</th>
       <th scope="col">Language</th>
       <th scope="col"></th>
     </tr>
@@ -27,10 +33,10 @@
     </td>
 
  
-    <td><span class='table-cell'>{{repo.stargazers_count}}</span></td>
+    <td><span class='table-cell'>{{repo.created_at}}</span></td>
   
 
-    <td><span class='table-cell'>{{repo.language}}</span></td>
+    <td><span class='table-cell'>{{repo.language}}</span><span class='language-icon'></span><i class="programming lang-{{repo.language|lower}}"></i></td>
  
     <td><a class='btn btn-success' href={{repo.html_url}}>View</a></td>
   </tr>
