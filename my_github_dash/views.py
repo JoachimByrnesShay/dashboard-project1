@@ -162,8 +162,8 @@ def pie_chart(request):
       #colors=('#1A535C', '#4ECDC4', '#F7FFF7', '#FF6B6B', '#FFE66D'))
 
     context = {}
-    context['pie_render'] = None
-    pie_chart = pygal.Pie(style=custom_style)
+    context['chart_render'] = None
+    pie_chart = pygal.Pie()
     if request.POST:
         print(request.POST)
         form = RepoForm(request.POST)
@@ -181,9 +181,10 @@ def pie_chart(request):
                     print(lang)
                     size = languages[lang]
                     pie_chart.add(lang, size)
-                pie = pie_chart.render()
+                #pie = pie_chart.render()
+                pie = pie_chart.render_data_uri()
 
-                context['pie_render'] = pie
+                context['chart_render'] = pie
                 context['form'] = form
                 return render(request, 'pages/pie.html', context)
         
