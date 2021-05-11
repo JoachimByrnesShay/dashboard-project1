@@ -2,6 +2,8 @@
 ### May 10, 2021
 #### joachim byrnes-shay
 #### dashboard app
+#### heroku url:  https://dashboard-project1.herokuapp.com/ 
+#### github url: https://github.com/JoachimByrnesShay/dashboard_project1
 -a presentation of github repository statistics
 -pygal charts and sorting functionality included
 -homepage
