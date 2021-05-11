@@ -1,207 +1,95 @@
-from django.shortcuts import render, redirect
-import requests, os
+"""imports of libraries, functions, and modules needed for views.py"""
+from django.shortcuts import render
 from dotenv import load_dotenv
-from github import Github, GithubException
-import pygal
-from django import forms
-import random
+"""from modules/*, custom modules containing utility fnctions and form classes"""
+from .modules import custom_utils
+from .modules import custom_forms
 
+"""load any needed env variables"""
 load_dotenv()
 
 
-class RepoForm(forms.Form):
-    domain= forms.CharField(max_length=10,initial='github.com', disabled=True)
-    user_name = forms.CharField(initial='JoachimByrnesShay')
-    repo_name=forms.CharField(initial='djangogirls_tute1')
-
-class BlankRepoForm(forms.Form):
-    domain= forms.CharField(initial='github.com', disabled=True)
-    user_name = forms.CharField(max_length=100, label='user_name', widget=forms.TextInput(attrs={'placeholder': 'must exist on github'}))
-    repo_name = forms.CharField(max_length=100, label='repo_name', widget=forms.TextInput(attrs={'placeholder': 'must exist on github'}))
-
+"""simple landing page view.  main content consists of additional button links for the repository data pages"""
 def home(request):
     context = {}
+    # 'home_active' is a templated variable in template. set to 'active' to set home page nav link to active class
     context['home_active'] = 'active'
     return render(request, 'pages/home.html', context)
 
 
-def get_repos(username='JoachimByrnesShay'):
-    url = "https://api.github.com/users/{username}/repos"
-    token = os.getenv('GH_ACCESS_TOKEN')
-    g = Github(token)
-    user = g.get_user()
-    login = user.login
-    return user.get_repos()
-
-def user_exists(user):
-    token = os.getenv('GH_ACCESS_TOKEN')
-    g = Github(token)
-    try:
-        user = g.get_user(user)
-    except:
-        user = None
-    return user
-
-def repo_exists(user, repo):
-    try: 
-        repo = user.get_repo(repo)
-    except:
-        repo = None
-    return repo
-
-def get_repo(user, repo):
-    
-    url = "https://api.github.com/users/%s/repos" % user
-    token = os.getenv('GH_ACCESS_TOKEN')
-    g = Github(token)
-   
-    try:
-        user = g.get_user(user)
-        repo = user.get_repo(repo)
-    except:
-        repo = None
-    return repo
-
-def sortby_data(data, sortby_value, attributes=None):
-     
-    item = getattr(data, sortby_value)
-    print(type(item))
-    print(str(item))
-    #if attributes:
-
-    try:
-        type(item) is int
-        return item
-    except:
-        #print(str(item).lower())
-        return item.lower()
-    # if type(int(data)) is int:
-    #     return getattr(data, sortby_value)
-    # else:
-    #     return str(getattr(data, sortby_value)).lower()
-
+"""tabular and sortable presentation of github repo data including name, repo size in kb or mb, 
+   date and time repo created, and primary programming language of repo. sortable for each """
 def table(request):
     context = {}
-    repos = get_repos()
+    # get_repos() is a utility function using pygithub to get all repos via api for a specified user, or for the defaultuser (see custom_utils) if no argument s passed
+    ## imported from modules/custom_utils.py
+    repos = custom_utils.get_repos()
     if request.POST:
-        print(request.POST)
-        sortby_value = request.POST['submit']
-        #print(value)
-        #repos=sorted(repos, key=lambda celldata: str(getattr(celldata, sortby_value)).lower())
-        if request.POST['order'] == 'desc' and sortby_value =='name':
+        # the table template contains a simple form containing a series of buttons of type 'submit' each with a hard-coded value for the repo attribute to sort_by as well as one radio button pair which
+        # specify the hard-coded values of either 'asc' or 'desc' which are utilied only if the sortby value is 'name' (repo.name).  
+        sortby_value = request.POST['sortby']
+        # if the radio button with value 'desc' was checked on submit AND the user has requested to sort by repo.name, assign rerverse_order = True, which will be passsed to the sorted function
+        if request.POST['alpha_order'] == 'desc' and sortby_value =='name':
             reverse_order = True
         else:
             reverse_order = False
       
-        
         if sortby_value == 'name':
             repos = sorted(repos, key=lambda repo_data: (repo_data.name.casefold(), repo_data.name), reverse=reverse_order)
         else:
-            repos= sorted(repos, key=lambda repo_data: sortby_data(repo_data, sortby_value))
-        #print(value)
-   # context['repos'] = get_repos().sort(my_names(e))
-   
-    
+            # any other value for sortby requires one less parameter and will be handlled by the sortby_data function which aggregates functionality int and string cases
+            # sortby_data() is a utility function imported from modules/custom_utils.py
+            repos= sorted(repos, key=lambda repo_data: custom_utils.sortby_data(repo_data, sortby_value))
+
     context['repos'] = repos
+    # 'table_active' is a templated variable in template. set to 'active' to set table page nav link to active class
     context['table_active'] = 'active'
     return render(request, 'pages/table.html', context)
 
 
+"""barchart presentation of relative repo sizes in owners github account.  not configurable"""  
 def bar_chart(request):
-    from pygal.style import Style
-    from pygal.style import DarkStyle, DarkSolarizedStyle, LightStyle
-
-    custom_style = Style(
-      background='#EDDCD2',
-      #background='#a4aced9',
-     # plot_background='#EDF6F9',
-      #plot_background="#F0EFCB",
-      #plot_background='#FEFAE0',
-      #plot_background='#FEEAFA',
-      plot_background='#EDF2FB',
-      
-      foreground='#370617',
-      foreground_srrong='#FFFFFF',
-      foreground_subtle='#000000',
-      opacity='1',
-      opacity_hover='0.3',
-      title_font_size=30,
-      transition='400ms ease-in')
     context = {}
-    
-    #line_chart = pygal.Bar(truncate_label=30, style=custom_style)
-    line_chart = pygal.Bar(truncate_label=30, style=custom_style)
-    line_chart.title = 'Repos by size'
-    repos = get_repos()
-   
-    for repo in repos:
-        line_chart.add(repo.name, repo.size)
-
-    chart_svg = line_chart.render_data_uri()
+    chart_svg = custom_utils.get_repos_size_barchart()
     context['chart_render']= chart_svg
+    # 'bar_chart_active' is a templated variable in template. set to 'active' to set barchart page nav link to active class
     context['bar_chart_active'] = 'active'
     return render(request, 'pages/bar.html', context)
 
 
-
-# NOTES:   get_repo and get repos need to use request and search
-# PIE chart fucntionality contingent upon this
-
-def pie_chart(request):
-    from pygal.style import Style
-    custom_style = Style(
-      background='#343A40',
-      plot_background="#FEFFE9",
-      foreground='#FFFFFF',
-      foreground_strong='#FFFFFF',
-      foreground_subtle='#000000',
-      opacity='1',
-      opacity_hover='1',
-      title_font_size=24,
-      transition='400ms ease-in')
-      #colors=('#1A535C', '#4ECDC4', '#F7FFF7', '#FF6B6B', '#FFE66D'))
-
+"""configurable repo selection.  piechart presentation of proportional usage of programming languages used per a single repo.
+Any existing public github repository can be viewed by entering user and repo name in form"""  
+def pie_chart(request): 
     context = {}
     context['chart_render'] = None
-    pie_chart = pygal.Pie()
+    
     if request.POST:
-        print(request.POST)
-        form = RepoForm(request.POST)
+        form = custom_forms.GetRepoForm(request.POST)
+        
         if form.is_valid():
+            # validate input based form data
             domain = form.cleaned_data['domain']
             user_name = form.cleaned_data['user_name']
             repo_name = form.cleaned_data['repo_name']
-            g= Github(user_name)
-
-            repo = get_repo(user_name, repo_name)
-            pie_chart.title = "Languages used in this repository"
+            # get_repo returns a valid repo object if repo of user_name and repo_name exist, else returns None
+            repo = custom_utils.get_repo(user_name, repo_name)
+            
             if repo:
-                languages = requests.get(repo.languages_url).json()
-                for lang in languages:
-                    print(lang)
-                    size = languages[lang]
-                    pie_chart.add(lang, size)
-                #pie = pie_chart.render()
-                pie = pie_chart.render_data_uri()
-
-                context['chart_render'] = pie
+                # get_repo_languages_piechart() returns svg piechart using json object derived from languages list data at repo.languages_url
+                context['chart_render'] = custom_utils.get_repo_languages_piechart(repo)
                 context['form'] = form
+                # return and render if we have reached this point
                 return render(request, 'pages/pie.html', context)
         
-        initial = {}
-        if user_exists(user_name):
-            initial['user_name'] = user_name
-        if repo_exists(user_name,repo_name):
-            initial['repo_name'] = repo_name
-        form = BlankRepoForm(initial=initial)
-        context['form'] = form
-        return render(request, 'pages/pie.html', context)
+        # nonexistent_repo_piechart_form() returns a new repo request form for the piechart template which will show placeholder content 
+        # in repo_name field but retains POST data in user_name field if latter exists but former does not, or placeholder in both fields if at least user_name does not exist
+        form = custom_utils.nonexistent_repo_piechart_form(user_name, repo_name)
     else:
-        default_user = 'JoachimByrnesShay'
-        repo = get_repos()[1].name
-        form = RepoForm()
+        # if there was neither a successful POST submit nor a failed POSST submit for which placeholder content is specialized, create default repo request form using default initial values
+        form = custom_forms.GetRepoForm()
+
+    # pie_chart_active' is a templated variable in template. set to 'active' to set pie_chart page nav link to active class
     context['pie_chart_active'] = 'active'
     context['form'] = form
     return render(request, 'pages/pie.html', context)
-     
-
+ 

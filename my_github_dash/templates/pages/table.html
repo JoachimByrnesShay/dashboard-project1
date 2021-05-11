@@ -1,50 +1,41 @@
-
 {% extends 'base.html' %}
+<!-- mathfilters provides a divide filter, utilized below to determine if repo.size should display in kb or MB -->
 {% load mathfilters %}
 
+<!-- programing-language-icons stylesheet provided by abranhe.  templating and filter and necessary classes are utilized to display programming language icon below -->
 {% block css-extra %}
 <link href="https://languages.abranhe.com/logos.css" rel="stylesheet">
 {% endblock %}
-{% with table_active='active' %}
-{% endwith %}
+
 {% block content %}
 <h1 class='text-center'>A tabular view of Github repositories</h1>
 <form method='POST' class='sorting-form'>
-{% csrf_token %}
-<h3> Note: column data can be sorted.  Name by alpha, size by numeric, created date by chronological, language by alpha</h3>
-<table class="table">
-<thead class="bg-dark text-white">
-    <tr>
-      <th scope="col"><label>asc<input type='radio' name='order' value='asc' checked></label><label>desc<input type='radio' name='order' value='desc'></label><button type='submit' name='submit' value='name'>Name</button></th>
-      <th scope="col"><button type='submit' name='submit' value='size'>Size</button></th>
-      <th scope="col"><button type='submit' name='submit' value='created_at'>Created Date</button></th>
-      <th scope="col"><button type='submit' name='submit' value='language'>Language</button></th>
-      <th scope="col"></th>
-    </tr>
-</thead>
-{% for repo in repos %}
-  <tr>
-    <td class="font-weight-bold"><span class='table-cell'>{{repo.name}}</span></td>
-
-    <td><span class='table-cell'>
-      {% if repo.size < 1000 %}
-        {{repo.size}} kb
-      {% else %}
-        {{repo.size|div:1024|floatformat:2}} MB
-      {% endif %}
-    </span>
-    </td>
-
- 
-    <td><span class='table-cell'>{{repo.created_at}}</span></td>
-  
-
-    <td><span class='table-cell'>{{repo.language}}</span><span class='language-icon'></span><i class="programming lang-{{repo.language|lower}}"></i></td>
- 
-    <td><a class='btn btn-success' href={{repo.html_url}}>View</a></td>
-  </tr>
-{% endfor %}
-
-</table>
+    {% csrf_token %}
+    <h3> Note: column data can be sorted. Name by alpha, size by numeric, created date by chronological, language by alpha</h3>
+    <table class="table">
+        <thead class="bg-dark text-white">
+            <tr>
+                <th scope="col">
+                  <label>asc<input type='radio' name='alpha_order' value='asc' checked=true></label>
+                  <label>desc<input type='radio' name='alpha_order' value='desc'></label>
+                  <button type='submit' name='sortby' value='name'>Name</button>
+                </th>
+                <th scope="col"><button class='btn' type='submit' name='sortby' value='size'>Size</button></th>
+                <th scope="col"><button class='btn' type='submit' name='sortby' value='created_at'>Date Created</button></th>
+                <th scope="col"><button class='btn' type='submit' name='sortby' value='language'>Language</button></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        {% for repo in repos %}
+        <tr>
+            <td class="font-weight-bold"><span class='table-cell'>{{repo.name}}</span></td>
+            <td><span class='table-cell'>
+                    <!-- use tags, mathfilters and built-in django filters to display in kb if repo.size < 1024, MB if > 1024 -->
+                    {% if repo.size < 1024 %} {{repo.size}} kb {% else %} {{repo.size|div:1024|floatformat:2}} MB {% endif %} </span> </td> <td><span class='table-cell'>{{repo.created_at}}</span></td>
+            <td><span class='table-cell'>{{repo.language}}</span><span class='language-icon'></span><i class="programming lang-{{repo.language|lower}}"></i></td>
+            <td><a class='btn btn-success' href={{repo.html_url}}>View</a></td>
+        </tr>
+        {% endfor %}
+    </table>
 </form>
 {% endblock %}

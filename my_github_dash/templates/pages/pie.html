@@ -1,42 +1,27 @@
 {% extends 'base.html' %}
-{% load mathfilters %}
+
 {% block content %}
-
 <div class='pie-display'>
-  <h1 class='text-center'>Languages used</h1>
-<h2 class='pie-repo'>
-{% if form.repo_name.value %}
-  GITHUB REPO:  {{ form.user_name.value}}/{{form.repo_name.value}}
-{% else %}
-  Please make sure the Github repository you request exists!
-{% endif %}
-</h2>
-<form class="form" method="POST">
-    {% csrf_token %}
-
-       {{form.domain}}/
-       {{form.user_name}}/
-       {{form.repo_name}}
-<!-- 
-            <input type='text' name='domain' placeholder='github.com' value = "{{domain}}" id='id_domain'>
-       
-
-        <input type='text' name='user_name' placeholder='user_name' value="{{fuser_name}}" id='id_user_name'>
-        
-            <span>/</span>
-     
-        <input type='text' name='repo_name' placeholder='repo_name' value="{{repo_name}}" id="id_repo_name"> -->
-    
-
-     <button class="btn" type='submit'>Show</button> 
-</form>
-{% if chart_render %}
-
-
-<embed type="image/svg+xml" src="{{ chart_render|safe}}" />
-
-{% endif %}
-
+    <h1 class='text-center'>Languages used</h1>
+    <h2 class='pie-repo'>
+        <!-- if no POST submission, or if valid github repo is selected, repo's user and repo name appear as h2 content -->
+        {% if form.repo_name.value %}
+        GITHUB REPO: {{ form.user_name.value}}/{{form.repo_name.value}}
+        {% else %}
+        <!-- otherwise message notifies user that the combo of username and reponame do not exist -->
+        Please make sure the Github repository you request exists!
+        {% endif %}
+    </h2>
+    <form class="form" method="POST">
+        <!-- form populates with default, user input if POST successful (repo exists), or if either username or reponame do not exist on github- displays placeholder as configured in custom_forms file-->
+        {% csrf_token %}
+        {{form.domain}}/
+        {{form.user_name}}/
+        {{form.repo_name}}
+        <button class="btn" type='submit'>Show</button>
+    </form>
+    {% if chart_render %}
+    <embed type="image/svg+xml" src="{{ chart_render|safe}}" />
+    {% endif %}
 </div>
-    
 {% endblock %}

@@ -2,6 +2,7 @@
 {% load mathfilters %}
 {% block content %}
 <div class='bar-display'>
-<embed type="image/svg+xml" src="{{ chart_render|safe}}" />
+    <!-- bar chart is created in view and rendered via context from view -->
+    <embed type="image/svg+xml" src="{{ chart_render|safe}}" />
 </div>
 {% endblock %}
