@@ -141,3 +141,21 @@ h2.pie-repo {
 .bar-display {
   border: 1px solid black;
 }
+
+form.sorting-form button {
+  width: 10em;
+}
+
+form.sorting-form h3 {
+  background: lightgrey;
+  font-size: 1em;
+}
+
+form.sorting-form input[type='radio'] {
+  margin-right: .5em;
+}
+
+form.sorting-form label {
+  padding: 0;
+  margin: 0;
+}

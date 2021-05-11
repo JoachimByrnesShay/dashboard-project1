@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 {% load mathfilters %}
 
@@ -8,19 +9,21 @@
 {% endwith %}
 {% block content %}
 <h1 class='text-center'>A tabular view of Github repositories</h1>
+<form method='POST' class='sorting-form'>
+{% csrf_token %}
+<h3> Note: column data can be sorted.  Name by alpha, size by numeric, created date by chronological, language by alpha</h3>
 <table class="table">
 <thead class="bg-dark text-white">
     <tr>
-      <th scope="col">Name</th>
-      <th scope="col">Size</th>
-      <th scope="col">Created Date</th>
-      <th scope="col">Language</th>
+      <th scope="col"><label>asc<input type='radio' name='order' value='asc' checked></label><label>desc<input type='radio' name='order' value='desc'></label><button type='submit' name='submit' value='name'>Name</button></th>
+      <th scope="col"><button type='submit' name='submit' value='size'>Size</button></th>
+      <th scope="col"><button type='submit' name='submit' value='created_at'>Created Date</button></th>
+      <th scope="col"><button type='submit' name='submit' value='language'>Language</button></th>
       <th scope="col"></th>
     </tr>
 </thead>
 {% for repo in repos %}
   <tr>
-    
     <td class="font-weight-bold"><span class='table-cell'>{{repo.name}}</span></td>
 
     <td><span class='table-cell'>
@@ -43,4 +46,5 @@
 {% endfor %}
 
 </table>
+</form>
 {% endblock %}

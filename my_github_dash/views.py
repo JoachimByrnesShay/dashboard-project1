@@ -62,16 +62,47 @@ def get_repo(user, repo):
         repo = None
     return repo
 
+def sortby_data(data, sortby_value, attributes=None):
+     
+    item = getattr(data, sortby_value)
+    print(type(item))
+    print(str(item))
+    #if attributes:
 
-def lower_case(e):
-    return capitalize(str(e.name))
+    try:
+        type(item) is int
+        return item
+    except:
+        #print(str(item).lower())
+        return item.lower()
+    # if type(int(data)) is int:
+    #     return getattr(data, sortby_value)
+    # else:
+    #     return str(getattr(data, sortby_value)).lower()
 
 def table(request):
     context = {}
+    repos = get_repos()
+    if request.POST:
+        print(request.POST)
+        sortby_value = request.POST['submit']
+        #print(value)
+        #repos=sorted(repos, key=lambda celldata: str(getattr(celldata, sortby_value)).lower())
+        if request.POST['order'] == 'desc' and sortby_value =='name':
+            reverse_order = True
+        else:
+            reverse_order = False
+      
+        
+        if sortby_value == 'name':
+            repos = sorted(repos, key=lambda repo_data: (repo_data.name.casefold(), repo_data.name), reverse=reverse_order)
+        else:
+            repos= sorted(repos, key=lambda repo_data: sortby_data(repo_data, sortby_value))
+        #print(value)
    # context['repos'] = get_repos().sort(my_names(e))
-    stuff =  get_repos()
-    things =  sorted(stuff, key=lambda k: k.name.lower())
-    context['repos'] = things
+   
+    
+    context['repos'] = repos
     context['table_active'] = 'active'
     return render(request, 'pages/table.html', context)
 
